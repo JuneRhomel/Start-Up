@@ -1,8 +1,9 @@
 import express from 'express';
 import loginRouter from '../auth/login.js';
 import logoutRouter from '../auth/logout.js';
-import { createProduct, getProduct, listProduct, updateProduct, deleteProduct } from '../product/product.js';
 import registerRouter from '../register/register.js';
+import { createProduct, getProduct, listProduct, updateProduct, deleteProduct } from '../product/product.js';
+import { createProfile, listProfile } from '../profile/profile.js';
 const router = express.Router();
 const app = express();
 app.use(express.json());
@@ -15,5 +16,7 @@ router.use('/product', updateProduct);
 router.use('/product', listProduct);
 router.use('/product', getProduct);
 router.use('/product', deleteProduct);
+router.use('/profile', createProfile);
+router.use('/profile', listProfile);
 export default router;
 //# sourceMappingURL=router.js.map

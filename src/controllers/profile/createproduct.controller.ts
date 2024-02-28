@@ -1,22 +1,21 @@
-import { AccountTabedata } from "../../model/User.model.js";
-import { checkRequiredFields, connection, hashData, } from "../../config/common.js";
-import { Request, Response } from 'express';
+import { checkRequiredFields, connection } from "../../config/common.js";
+import { Response } from 'express';
 import { handelErrorResponse, handelSuccessResponse, handleMissingFieldResponse } from "../response.controller.js";
-import { ProductUploadModel } from "../../model/product.model.js";
+import { ProfileUploadModel } from "../../model/profile.model.js";
 
 /**
- * Create product handler function.
+ * Upload Profile handler function.
  *
- * @param {ProductUploadModel} details - details of the product
+ * @param {ProfileUploadModel} details - details of the product
  * @param {number} tokenId - identification number
  * @param {string} dbCode - code for the database
  * @param {Response} res - response object
  * @return {Promise<Response>} response object wrapped in a promise
  */
-export function createProductHandler(details: ProductUploadModel, tokenId: number, dbCode: string, res: Response): Response {
+export function createProfileHandler(details: ProfileUploadModel, tokenId: number, dbCode: string, res: Response): Response {
     return new Promise(async (resolve, reject) => {
         const data = details
-        const required = ["product_name", 'prize', 'status']
+        const required = ["user_id", "path", "original_name", "size", "url_image", 'file_name']
         const requiredFields = await checkRequiredFields(data, required, res)
         if (requiredFields.length > 0) {
             await handleMissingFieldResponse(res, requiredFields)
@@ -24,12 +23,12 @@ export function createProductHandler(details: ProductUploadModel, tokenId: numbe
         }
         data.created_by = tokenId
         data.created_at = new Date().getTime();
-        connection.query(`INSERT INTO ${dbCode}.product SET ?`, data, async (err, result) => {
+        connection.query(`INSERT INTO ${dbCode}.profile_pic SET ?`, data, async (err, result) => {
             if (err) {
                 handelErrorResponse(res, err)
                 reject(err)
             }
-            await handelSuccessResponse(res, "Product created successfully")
+            await handelSuccessResponse(res, "Profile picture has been uploaded")
         })
         await resolve(res)
     })
