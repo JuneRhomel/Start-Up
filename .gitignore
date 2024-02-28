@@ -12,7 +12,8 @@
 /build
 
 # misc
-.pem
+*.pem
+
 .DS_Store
 .env.local
 .env.development.local
