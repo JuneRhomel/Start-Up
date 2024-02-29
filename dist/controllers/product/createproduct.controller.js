@@ -1,9 +1,9 @@
-import { checkRequiredFields, connection } from "../../config/common.js";
+import { checkRequiredFields, connection, } from "../../config/common.js";
 import { handelErrorResponse, handelSuccessResponse, handleMissingFieldResponse } from "../response.controller.js";
 /**
  * Create product handler function.
  *
- * @param {any} details - details of the product
+ * @param {ProductUploadModel} details - details of the product
  * @param {number} tokenId - identification number
  * @param {string} dbCode - code for the database
  * @param {Response} res - response object
@@ -17,17 +17,19 @@ export function createProductHandler(details, tokenId, dbCode, res) {
         if (requiredFields.length > 0) {
             await handleMissingFieldResponse(res, requiredFields);
             reject(requiredFields);
+            return;
         }
         data.created_by = tokenId;
         data.created_at = new Date().getTime();
         connection.query(`INSERT INTO ${dbCode}.product SET ?`, data, async (err, result) => {
             if (err) {
-                handelErrorResponse(res, err);
+                await handelErrorResponse(res, err);
                 reject(err);
             }
             await handelSuccessResponse(res, "Product created successfully");
         });
         await resolve(res);
+        return;
     });
 }
 //# sourceMappingURL=createproduct.controller.js.map

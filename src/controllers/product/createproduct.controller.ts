@@ -21,16 +21,18 @@ export function createProductHandler(details: ProductUploadModel, tokenId: numbe
         if (requiredFields.length > 0) {
             await handleMissingFieldResponse(res, requiredFields)
             reject(requiredFields)
+            return
         }
         data.created_by = tokenId
         data.created_at = new Date().getTime();
         connection.query(`INSERT INTO ${dbCode}.product SET ?`, data, async (err, result) => {
             if (err) {
-                handelErrorResponse(res, err)
+                await handelErrorResponse(res, err)
                 reject(err)
             }
             await handelSuccessResponse(res, "Product created successfully")
         })
         await resolve(res)
+        return
     })
 }

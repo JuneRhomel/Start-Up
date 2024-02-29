@@ -7,10 +7,15 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 router.post("/", (req, res) => {
     requireUser(req, res, async ({ id, dbCode }) => {
-        const data = req.body;
-        data.created_by = id;
-        data.created_at = new Date().getTime();
-        await createProductHandler(data, id, dbCode, res);
+        try {
+            const data = req.body;
+            data.created_by = id;
+            data.created_at = new Date().getTime();
+            await createProductHandler(data, id, dbCode, res);
+        }
+        catch (err) {
+            console.log(err);
+        }
     });
 });
 export default router;

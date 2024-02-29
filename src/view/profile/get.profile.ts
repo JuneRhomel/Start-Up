@@ -6,17 +6,20 @@ const router = express.Router();
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 router.get("/", (req, res) => {
-    requireUser(req, res, async ({ id, dbCode }) => {
+    requireUser(req, res, async ({ id, dbCode }: { id: number, dbCode: string }) => {
         try {
-            const result = await getMyProfileHandler(id, dbCode, res);
-            await handelDataResponse(res, result);
+            const result = await getMyProfileHandler(id, dbCode, res)
+            await handelDataResponse(res, result)
+
+        } catch (err) {
+            console.log(err)
+            await handelErrorResponse(res, "Something went wrong")
         }
-        catch (err) {
-            console.log(err);
-            await handelErrorResponse(res, "Something went wrong");
-        }
-    });
-});
-export default router;
-//# sourceMappingURL=get.profile.js.map
+    })
+})
+
+
+
+export default router

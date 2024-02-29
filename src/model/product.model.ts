@@ -10,3 +10,11 @@ export type Product = {
     deleted_by?: number
     updated_at?: number
 }
+
+export type ProductUploadModel = {
+    product_name: string
+    price: number
+    status: string
+    created_by?: number
+    created_at?: number
+}

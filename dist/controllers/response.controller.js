@@ -18,7 +18,7 @@ export function handelErrorResponse(res, message) {
  */
 export function handleMissingFieldResponse(res, message) {
     const response = { message: "Missing required fields: " + message.join(", ") };
-    res.status(400).send(response);
+    throw new Error(response.message);
 }
 /**
  * Sends a success response with the given message.

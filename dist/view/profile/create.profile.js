@@ -2,6 +2,7 @@ import { requireUser } from "../../middleware/requireUser.js";
 import { express, multer, dotenv } from "../../config/common.js";
 import { profileTable } from "../../db/index.js";
 import { createProfileHandler } from "../../controllers/profile/createproduct.controller.js";
+import { handelErrorResponse } from "../../controllers/response.controller.js";
 import path from "path";
 const router = express.Router();
 const app = express();
@@ -21,23 +22,34 @@ const upload = multer({
 });
 router.post("/", (req, res) => {
     requireUser(req, res, async ({ id, dbCode }) => {
-        await profileTable(dbCode);
-        upload.single('url_image')(req, res, async (err) => {
-            if (err) {
-                return res.status(400).send(err.message);
+        try {
+            await profileTable(dbCode);
+            if (!req.file) {
+                throw Error("No file uploaded");
             }
-            console.log(req.file);
-            const profileUrl = `${process.env.BASE_URL}/public/uploads/profile/${req.file.filename}`;
-            const profile = {
-                user_id: id,
-                url_image: profileUrl,
-                path: req.file.path,
-                file_name: req.file.filename,
-                original_name: req.file.originalname,
-                size: req.file.size
-            };
-            await createProfileHandler(profile, id, dbCode, res);
-        });
+            else {
+                upload.single('url_image')(req, res, async (err) => {
+                    if (err) {
+                        throw Error(err);
+                    }
+                    console.log(req.file);
+                    const profileUrl = `${process.env.BASE_URL}/public/uploads/profile/${req.file.filename}`;
+                    const profile = {
+                        user_id: id,
+                        url_image: profileUrl,
+                        path: req.file.path,
+                        file_name: req.file.filename,
+                        original_name: req.file.originalname,
+                        size: req.file.size
+                    };
+                    await createProfileHandler(profile, id, dbCode, res);
+                });
+            }
+        }
+        catch (err) {
+            console.log(err);
+            await handelErrorResponse(res, err);
+        }
     });
 });
 export default router;

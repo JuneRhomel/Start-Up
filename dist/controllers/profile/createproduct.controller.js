@@ -1,9 +1,9 @@
 import { checkRequiredFields, connection } from "../../config/common.js";
-import { handelErrorResponse, handelSuccessResponse, handleMissingFieldResponse } from "../response.controller.js";
+import { handelSuccessResponse, handleMissingFieldResponse } from "../response.controller.js";
 /**
- * Create product handler function.
+ * Upload Profile handler function.
  *
- * @param {any} details - details of the product
+ * @param {ProfileUploadModel} details - details of the product
  * @param {number} tokenId - identification number
  * @param {string} dbCode - code for the database
  * @param {Response} res - response object
@@ -22,7 +22,7 @@ export function createProfileHandler(details, tokenId, dbCode, res) {
         data.created_at = new Date().getTime();
         connection.query(`INSERT INTO ${dbCode}.profile_pic SET ?`, data, async (err, result) => {
             if (err) {
-                handelErrorResponse(res, err);
+                throw Error("Error creating profile picture");
                 reject(err);
             }
             await handelSuccessResponse(res, "Profile picture has been uploaded");

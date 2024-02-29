@@ -56,11 +56,12 @@ export function invalidateSession(sessionId) {
  * @param {string} name - The name of the user
  * @param {string} dbCode - The database code
  * @param {Number} id - The id of the session
+ * @param {string} accountCode - The account code
  * @return {Object} The created session
  */
-export function createSession(email, name, dbCode, id) {
+export function createSession(email, name, dbCode, id, accountCode) {
     const sessionId = String(Object.keys(sessions).length + 1);
-    const session = { id, sessionId, email, dbCode, valid: true, name };
+    const session = { id, sessionId, email, dbCode, valid: true, name, accountCode };
     sessions[sessionId] = session;
     return session;
 }

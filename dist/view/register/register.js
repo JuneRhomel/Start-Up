@@ -2,7 +2,7 @@ import { express, checkRequiredFields, hashData } from "../../config/common.js";
 import { emailChecker, accountCodeGenerator } from "../../helper/function.helper.js";
 import { createDatabase, productTable, statusProductTable, userTable } from "../../db/index.js";
 import { handleQueryError, insertDbAccount, insertIntoAccounts, insertUser } from "../../controllers/createuser.controller.js";
-import { handelSuccessResponse } from "../../controllers/response.controller.js";
+import { handelErrorResponse, handelSuccessResponse } from "../../controllers/response.controller.js";
 const router = express.Router();
 const app = express();
 app.use(express.json());
@@ -12,10 +12,10 @@ router.post("/", async (req, res) => {
         checkRequiredFields(req.body, ["email", "first_name", "last_name", "password", "confirm_password"], res);
         const { email, password, confirm_password } = req.body;
         if (hashData(password) !== hashData(confirm_password)) {
-            return res.status(400).send("Password not match");
+            return handelErrorResponse(res, "Passwords do not match");
         }
         if (emailChecker(email) === false) {
-            return res.status(400).send("Invalid email");
+            return handelErrorResponse(res, "Invalid email address");
         }
         delete req.body.confirm_password;
         req.body.password = hashData(req.body.password);

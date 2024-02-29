@@ -10,7 +10,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-router.get("/", (req, res) => {
+router.post("/", (req, res) => {
     requireUser(req, res, async ({ id, dbCode }: { id: number, dbCode: string }) => {
         const result = await getProfileHandler(id, dbCode, res)
         await handelDataResponse(res, result)

@@ -21,7 +21,7 @@ export function createSessionHandler(req: Request, res: Response): Response {
     return res.status(401).send("Invalid email or password");
   }
 
-  const session: any = createSession(email, user.account_code, user.db_code, user.id);
+  const session: any = createSession(email, user.name, user.db_code, user.id, user.account_code);
 
   // Create access token
   const accessToken: string = signJWT(
